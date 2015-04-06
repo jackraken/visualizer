@@ -201,6 +201,17 @@ void serial_readwrite_task(void *pvParameters)
 	}
 }
 
+void cpu_test_task(void *pvParameters)
+{
+	while(1){
+        int i,j=0;
+        for(i=0;i<999999;i++){
+            j = i+1000;
+		}
+        vTaskDelay(100/portTICK_RATE_MS);
+    }
+}
+
 int main()
 {
 	logfile = open("log", 4);
@@ -245,8 +256,15 @@ int main()
 	 * them back to the RS232 port. */
 	xTaskCreate(serial_readwrite_task,
 	            (signed portCHAR *) "Serial Read/Write",
-	            512 /* stack size */, NULL,
-	            tskIDLE_PRIORITY + 10, NULL);
+	            512 /* stack size */, NULL,tskIDLE_PRIORITY + 10, NULL);
+	
+	xTaskCreate(cpu_test_task,
+ 	            (signed portCHAR *) "test",
+ 	            512 /* stack size */, NULL,tskIDLE_PRIORITY + 2, NULL);
+ 
+ 	xTaskCreate(cpu_test_task,
+ 	            (signed portCHAR *) "test2",
+ 	            512 , NULL,tskIDLE_PRIORITY + 1, NULL);
 
 	/* Start running the tasks. */
 	vTaskStartScheduler();
