@@ -11,6 +11,13 @@
 #include <stdarg.h>
 
 #define NVIC_INTERRUPTx_PRIORITY ( ( volatile unsigned char *) 0xE000E400 )
+/* Constants required to manipulate the NVIC. */
+#define portNVIC_SYSTICK_CTRL		( ( volatile unsigned long *) 0xe000e010 )
+#define portNVIC_SYSTICK_LOAD		( ( volatile unsigned long *) 0xe000e014 )
+#define portNVIC_SYSTICK_CURRENT		( ( volatile unsigned long *) 0xe000e018 )
+#define portNVIC_INT_CTRL			( ( volatile unsigned long *) 0xe000ed04 )
+#define portNVIC_SYSPRI2			( ( volatile unsigned long *) 0xe000ed20 )
+
 
 int logfile = 0;
 

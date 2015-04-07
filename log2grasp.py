@@ -11,6 +11,7 @@ TRACE_BINARY_SEMAPHORE = False
 TRACE_INTERRUPT = False
 
 log = open('log', 'r')
+context_switch_log = open('context_switch_record.txt', 'w')
 lines = log.readlines()
 
 tasks = {}
@@ -19,6 +20,9 @@ mutexes = {}
 all_queues = {}
 binsems = {}
 queues = {}
+
+count=0
+total_time=0.0
 
 for line in lines :
 	line = line.strip()
@@ -36,11 +40,15 @@ for line in lines :
 		tasks[id] = task
 		
 	elif inst == 'switch' :
-		out_task, in_task, tick, tick_reload, out_minitick, in_minitick = args.split(' ')
-		
+		out_task, in_task, tick, tick_reload, out_minitick, in_minitick = args.split(' ')	
 		out_time = (float(tick) + (float(tick_reload) - float(out_minitick)) / float(tick_reload)) / 100 * 1000;
 		in_time  = (float(tick) + (float(tick_reload) - float(in_minitick))  / float(tick_reload)) / 100 * 1000;
 		
+		context_switch_log.write("context switch time : %f\n" %(in_time-out_time));		
+		count += 1;
+		total_time += (in_time - out_time);		
+
+
 		event = {}
 		event['type'] = 'task out'
 		event['task'] = out_task
@@ -164,7 +172,8 @@ for line in lines :
 			tasks[int_num]['created'] = True if dir == 'in' else False
 
 log.close()
-
+context_switch_log.write("average time : %f" %(total_time/count));
+context_switch_log.close();
 grasp = open('sched.grasp', 'w')
 
 for id in tasks :

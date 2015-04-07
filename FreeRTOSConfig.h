@@ -92,7 +92,7 @@ int  get_current_interrupt_number
 
 #define traceTASK_SWITCHED_OUT() \
 	tskTCB *pxPreviousTCB = pxCurrentTCB; \
-	unsigned previous_systick_current = *(unsigned *) 0xE000E018;
+	unsigned previous_systick_current = *(volatile unsigned *) 0xE000E018;
 
 #define traceTASK_SWITCHED_IN() \
 	if (pxPreviousTCB != pxCurrentTCB) { \
